@@ -1,0 +1,12 @@
+train_params:
+  epochs: 100
+  lr: 0.001
+  batch_size: 64
+  num_workers: 4
+  img_size: [224, 224]
+  path_save_checkpoint: "../models/"
+  path_to_classes: "D:\\projects_andrey\\cv_made_dataset\\vk-made-sports-image-classification\\encode_classes.json"
+  name_model: 'swin_base_patch4_window7_224'
+  pretrained: True
+  path_to_weights: "../models/best_checkpoint_model_swin_224_224.pth"
+  path_to_dataset: "D:\\projects_andrey\\cv_made_dataset\\vk-made-sports-image-classification"
