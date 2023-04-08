@@ -9,7 +9,7 @@ from timm.loss import LabelSmoothingCrossEntropy
 from torch.utils.tensorboard import SummaryWriter
 
 from src.models.engine import train_epoch, valid_epoch
-from src.models.swin_model import get_model
+from src.models.classifications_models import get_model
 from src.utils.utils import (
     update_lr,
     get_dict_classes

@@ -8,7 +8,7 @@ import hydra
 import logging
 import sys
 
-from src.models.swin_model import get_model
+from src.models.classifications_models import get_model
 from src.utils.utils import (
     get_dict_classes
 )
@@ -38,9 +38,22 @@ def predict_pipeline(params: PredictionParams):
     if params.visualize_result and os.path.exists(params.path_to_save_images):
         shutil.rmtree(params.path_to_save_images)
 
+    if os.path.exists(params.path_to_weights):
+        logger.info(f"Loading the model: {params.path_to_weights}")
+        state_dict = torch.load(params.path_to_weights)
+
+        if "model_state" not in state_dict:
+            model_weights = state_dict
+
+        logger.info("The model has been loaded successfully")
+    else:
+        raise "No model weights found!"
+
     model = get_model(params.name_model,
-                      params.path_to_weights, len(encode_classes2index),
-                      params.pretrained).to(device)
+                      len(encode_classes2index),
+                      requires_grad=False,
+                      model_weights=model_weights,
+                      pretrained=params.pretrained).to(device)
     model.eval()
     test = pd.read_csv(os.path.join(params.path_to_dataset, 'test.csv'))
     test = list(test['image_id'])

@@ -73,9 +73,9 @@ tensorboard --logdir=<folder "runs">
 
 # Эксперименты
 
- Модель   | Epoch | Train F1 Score | Validate F1 Score |
-----------|-------|---------------| ---------------|
-ResNet50 | -     | -             | -             |
-ResNet101 | -     | -             | -             |
-swin_base_patch4_window7_224 | -     | 0.9240              | 0.9266              |
-swin_large_patch4_window12_384_in22k | -     | 0.9703              | 0.9708              |
+ Модель   | Epoch | Image size | Train F1 Score | Validate F1 Score | Test F1 Score |
+----------|-------|------------|---------------| ------------|---------|
+ResNet50 | -     | (224, 224) | -          | -           | -       |
+ResNet101 | -     | (224, 224) |-          | -           | -       |
+swin_base_patch4_window7_224 | -    | (224, 224) | 0.9240     | 0.9266      | 0.92738        |
+swin_large_patch4_window12_384_in22k | -     | (384, 384) | 0.9703     | 0.9708      | 0.95361      |

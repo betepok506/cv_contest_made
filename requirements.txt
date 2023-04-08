@@ -7,3 +7,4 @@ hydra-core
 pandas
 opencv-python
 scikit-learn
+tensorboard
