@@ -1,7 +1,11 @@
 venv
 .venv/
-#models
-#!models/.gitkeep
+models
+outputs
+*/outputs
+runs/
+*/runs/
+results
 __pycache__/
 *.py[cod]
 
