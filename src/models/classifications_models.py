@@ -23,7 +23,6 @@ def get_model(name_model, num_classes, requires_grad=False, model_weights=None, 
             param.requires_grad = True
 
     elif re.compile("resnet*").match(name_model) is not None:
-        # todo: По имени модели вернуть соответствующу модель
         model = resnet_models(name_model, pretrained=pretrained, progress=True)
         num_features = model.fc.in_features
 
@@ -32,6 +31,14 @@ def get_model(name_model, num_classes, requires_grad=False, model_weights=None, 
 
         model.fc = nn.Linear(num_features, num_classes)
 
+    elif re.compile("efficientnet*").match(name_model) is not None:
+        model = timm.create_model(name_model, pretrained=pretrained)
+        num_features = model.classifier.in_features
+        for param in model.parameters():
+            param.requires_grad = requires_grad
+
+        model.classifier = nn.Linear(num_features, num_classes)
+
     else:
         raise NotImplementedError()
 
@@ -39,6 +46,7 @@ def get_model(name_model, num_classes, requires_grad=False, model_weights=None, 
         model.load_state_dict(model_weights)
 
     return model
+
 
 def resnet_models(name_model, pretrained=True, progress=True):
     if name_model == "resnet101":

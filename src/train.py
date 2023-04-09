@@ -43,10 +43,6 @@ def train_pipeline(params: TrainingPipelineParams) -> NoReturn:
     pretrained_epochs = 0
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-    # TODO: Сохранять в каталог tensorboard
-    # result_saving_directory = str(datetime.datetime.now().strftime("%d-%m-%Y-%H-%M"))
-    # params.train_params.path_save_checkpoint = os.path.join(params.train_params.path_save_checkpoint,
-    #                                                        result_saving_directory)
     params.train_params.path_save_checkpoint = os.path.join(writer.log_dir, 'models')
 
     os.makedirs(params.train_params.path_save_checkpoint, exist_ok=True)
@@ -68,7 +64,6 @@ def train_pipeline(params: TrainingPipelineParams) -> NoReturn:
         if "lr" in state_dict:
             lr = state_dict["lr"]
 
-        logger.info("The model has been loaded successfully")
 
     logger.info(f"Model: {params.train_params.name_model}")
     logger.info(f"The currently used device: {device}")
@@ -83,6 +78,9 @@ def train_pipeline(params: TrainingPipelineParams) -> NoReturn:
                       requires_grad=False,
                       model_weights = model_weights,
                       pretrained=params.train_params.pretrained).to(device)
+
+    if model_weights is not None:
+        logger.info("The model has been loaded successfully")
 
     criterion = LabelSmoothingCrossEntropy()
     criterion = criterion.to(device)
@@ -122,7 +120,7 @@ def train_pipeline(params: TrainingPipelineParams) -> NoReturn:
         if valid_epoch_f1_score > max(best_f1_score, 0.5):
             best_f1_score = valid_epoch_f1_score
 
-            logger.info(f"New best score: {best_f1_score}")
+            logger.info(f"New best score: {best_f1_score:.4f}")
             logger.info(f"Save checkpoint to {params.train_params.path_save_checkpoint}")
 
             with open(os.path.join(params.train_params.path_save_checkpoint,
@@ -142,9 +140,9 @@ def train_pipeline(params: TrainingPipelineParams) -> NoReturn:
                        os.path.join(params.train_params.path_save_checkpoint,
                                     f"checkpoint_{params.train_params.name_model}.pth"))
 
-        if (epoch + 1) % 2 == 0:
-            curr_lr = curr_lr * 0.8
-            update_lr(optimizer, curr_lr)
+        #if (epoch + 1) % 2 == 0:
+           # curr_lr = curr_lr * 0.8
+            #update_lr(optimizer, curr_lr)
 
 
 if __name__ == "__main__":
