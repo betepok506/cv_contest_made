@@ -44,6 +44,8 @@ def predict_pipeline(params: PredictionParams):
 
         if "model_state" not in state_dict:
             model_weights = state_dict
+        else:
+            model_weights = state_dict["model_state"]
 
         logger.info("The model has been loaded successfully")
     else:

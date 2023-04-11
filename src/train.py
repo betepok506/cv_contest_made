@@ -60,10 +60,11 @@ def train_pipeline(params: TrainingPipelineParams) -> NoReturn:
 
         if "model_state" not in state_dict:
             model_weights = state_dict
+        else:
+            model_weights = state_dict["model_state"]
 
         if "lr" in state_dict:
             lr = state_dict["lr"]
-
 
     logger.info(f"Model: {params.train_params.name_model}")
     logger.info(f"The currently used device: {device}")
@@ -76,7 +77,7 @@ def train_pipeline(params: TrainingPipelineParams) -> NoReturn:
     model = get_model(params.train_params.name_model,
                       len(encode_classes2index),
                       requires_grad=False,
-                      model_weights = model_weights,
+                      model_weights=model_weights,
                       pretrained=params.train_params.pretrained).to(device)
 
     if model_weights is not None:
@@ -91,7 +92,6 @@ def train_pipeline(params: TrainingPipelineParams) -> NoReturn:
     logger.info(f"Validating dataset size: {len(valid_data)}")
     logger.info(f"--------==== Start of training ====--------")
 
-    curr_lr = lr
     for epoch in range(epochs):
         logger.info(f"Pretrained epoch: {pretrained_epochs}. Epoch in the current session: {epoch} ")
 
@@ -107,7 +107,7 @@ def train_pipeline(params: TrainingPipelineParams) -> NoReturn:
         logger.info(f"Train Accuracy: {train_epoch_acc:.4f}")
         logger.info(f"Train F1 Score: {train_epoch_f1_score:.4f}")
 
-        writer.add_scalar("Train/Loss", train_epoch_loss, pretrained_epochs+epoch)
+        writer.add_scalar("Train/Loss", train_epoch_loss, pretrained_epochs + epoch)
         writer.add_scalar("Train/F1 Score", train_epoch_f1_score, pretrained_epochs + epoch)
 
         logger.info(f'Val Loss: {valid_epoch_loss:.4f}')
@@ -139,10 +139,6 @@ def train_pipeline(params: TrainingPipelineParams) -> NoReturn:
                         },
                        os.path.join(params.train_params.path_save_checkpoint,
                                     f"checkpoint_{params.train_params.name_model}.pth"))
-
-        #if (epoch + 1) % 2 == 0:
-           # curr_lr = curr_lr * 0.8
-            #update_lr(optimizer, curr_lr)
 
 
 if __name__ == "__main__":
